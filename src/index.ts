@@ -51,6 +51,22 @@ function calculateTax(income: number, taxYear = 1999): number {
 console.log(calculateTax(123, 2023));
 console.log(calculateTax(123));
 
+//function types
+function add(a: number, b: number): number {
+  const result = a + b;
+  return result;
+}
+
+function calculate(
+  a: number,
+  b: number,
+  calcFn: (a: number, b: number) => number
+) {
+  return calcFn(a, b);
+}
+
+console.log(calculate(2, 10, add));
+
 //Objects
 let employee: {
   readonly id: number;
@@ -143,12 +159,108 @@ function getCustomer(id: number): Customer | null | undefined {
 }
 
 let customer = getCustomer(0);
-console.log(customer?.birthday)
+console.log(customer?.birthday);
 
 let customer2 = getCustomer(2);
-console.log(customer2?.birthday?.getFullYear)
+console.log(customer2?.birthday?.getFullYear);
 
 //optional call
 let log: any = null;
-log?.('a');
+log?.("a");
 
+//interfaces
+interface Credentials {
+  username: string;
+  password: string;
+  email: string;
+}
+
+let creds: Credentials = {
+  username: "user",
+  email: "asdad@asdasd.com",
+  password: "pw",
+};
+
+class Authentication implements Credentials {
+  username: string;
+  password: string;
+  email: string;
+
+  constructor(username: string, password: string, email: string) {
+    this.username = username;
+    this.password = password;
+    this.email = email;
+  }
+}
+
+function login(credential: Credentials) {
+  return credential;
+}
+
+login(creds);
+login(new Authentication("a", "b", "c"));
+
+//merging types
+type Admin = {
+  permissions: string[];
+};
+
+type AppUser = {
+  userName: string;
+};
+
+type AppAdmin = Admin & AppUser;
+
+let admin: AppAdmin;
+admin = {
+  permissions: ["login"],
+  userName: "pedro",
+};
+
+//same "logic" with interfaces
+interface Admin2 {
+  permissions: string[];
+}
+
+interface AppUser2 {
+  userName: string;
+}
+
+interface AppAdmin2 extends Admin2, AppUser2 {}
+
+let admin2: AppAdmin2;
+admin = {
+  permissions: ["login"],
+  userName: "pedro",
+};
+
+//generic types
+type DataStorage<T> = {
+  storage: T[];
+  add: (data: T) => void;
+};
+
+const textStorage: DataStorage<string> = {
+  storage: ["a", "b", "c"],
+  add(data) {
+    this.storage.push(data);
+  },
+};
+
+type User = {
+  id: number;
+  username: string;
+};
+
+const userStorage: DataStorage<User> = {
+  storage: [],
+  add(data) {
+    this.storage.push(data);
+  },
+};
+
+function merge<T, U>(a: T, b: U) {
+  return { ...a, ...b };
+}
+
+const newUser = merge({ id: 1, username: "asd" }, { email: "asd@asd.com" });
